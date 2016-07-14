@@ -1,0 +1,34 @@
+#!/bin/bash
+set -e
+set -u
+export CDPATH=
+export PATH=/sbin:/usr/sbin:/bin:/usr/bin
+readonly MYNAME=$(basename $(readlink -e $BASH_SOURCE) .sh)
+readonly MYHOME=$(dirname $(readlink -e $BASH_SOURCE) )
+
+export CAUSE="${MYHOME}"
+export CAUSEINC="${MYHOME}/cause.sh"
+
+source "${CAUSEINC}"
+
+showhelp() {
+  log "${MYNAME} <name>"
+  exit 2
+}
+
+test $# -lt 1 &&
+  showhelp
+
+while test "=${1:0:1}" = "=-"; do
+  case "=$1" in
+  =-x)
+    set -x
+    shift
+    ;;
+  =-h|=--h*)
+    showhelp
+    ;;
+  esac
+done
+
+require $1
