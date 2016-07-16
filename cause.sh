@@ -14,6 +14,9 @@ declare -A CAUSEGITMAP
 source "${CAUSE}/functions.sh"
 source "${CAUSE}/defaults.sh"
 
+test -d ${CAUSELIBS} ||
+  mkdir -p ${CAUSELIBS}
+
 includeq "${SYSDEFDIR}/cause"
 includeq "${HOME}/.config/cause.sh"
 
