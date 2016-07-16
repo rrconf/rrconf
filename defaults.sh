@@ -9,7 +9,8 @@ SYSDEFDIR=/etc/default
 test -f /etc/redhat-release &&
   SYSDEFDIR=/etc/sysconfig
 
-CAUSELIBS=${MYHOME}/lib
+# MYHOME is set to a library home so use CAUSE location for libs by default
+CAUSELIBS=${CAUSE}/lib
 CAUSEGITBASE=github.com:cause/cause
 
 return 0
