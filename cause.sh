@@ -40,10 +40,7 @@ function getrepo() {
 
   cd $CAUSELIBS
   test -d $name && return 0
-  local repo=$CAUSEGITBASE-$name
-  echo ${CAUSEGITMAP[$name]}
-  test -n "${CAUSEGITMAP[$name]:-}" &&
-    repo=${CAUSEGITMAP[$name]}
+  local repo=${CAUSEGITMAP[$name]:-$CAUSEGITBASE-$name}
   git clone $repo $name
 }
 
