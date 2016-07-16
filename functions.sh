@@ -19,7 +19,9 @@ include() {
     log 'zero length argument to include()'
     return 0
   }
-  local incl=$(readlink -e "$file") || {
+  # some versions of readlink don't fail on missing file here
+  local incl=$(readlink -e "$file") || true
+  test "${incl}" || {
     log "file ${file} to include was not found"
     return 0
   }
@@ -38,7 +40,9 @@ includeq() {
   test -z "${file}" && {
     return 0
   }
-  local incl=$(readlink -e "$file") || {
+  # some versions of readlink don't fail on missing file here
+  local incl=$(readlink -e "$file") || true
+  test "${incl}" || {
     return 0
   }
   source "${incl}" || {
