@@ -25,7 +25,7 @@ function __cause_cleanup() {
 export CAUSETRACE=${CAUSETRACE:=0}
 test ${CAUSETRACE} = 0 && {
   export CAUSETRACE=$(mktemp /tmp/cause-$(date +%Y%m%d-%H%M%S)-XXXXXXX)
-  trap __cause_cleanup 1 2 3 6 15
+  trap __cause_cleanup 0 1 2 3 6 15
   echo $0 >> ${CAUSETRACE}
 }
 
