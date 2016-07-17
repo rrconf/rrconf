@@ -17,6 +17,18 @@ source "${CAUSE}/defaults.sh"
 test -d ${CAUSELIBS} ||
   mkdir -p ${CAUSELIBS}
 
+function __cause_cleanup() {
+  cat ${CAUSETRACE}
+  rm -f ${CAUSETRACE}
+}
+
+export CAUSETRACE=${CAUSETRACE:=0}
+test ${CAUSETRACE} = 0 && {
+  export CAUSETRACE=$(mktemp /tmp/cause-$(date +%Y%m%d-%H%M%S)-XXXXXXX) )
+  trap __cause_cleanup 1 2 3 6 15
+  echo $0 >> ${CAUSETRACE}
+}
+
 includeq "${SYSDEFDIR}/cause"
 includeq "${HOME}/.config/cause.sh"
 
@@ -44,9 +56,23 @@ function getrepo() {
   git clone $repo $name
 }
 
+function markloaded() {
+  local name=$1
+
+  echo "require=$name" >> ${CAUSETRACE}
+}
+
+function checkloaded() {
+  local name=$1
+
+  grep -F "require=$name" >/dev/null 2>&1 ${CAUSETRACE}
+}
+
 function require() {
   local name=$1
 
+  checkloaded $name && return 0
+  markloaded $name || exit 1
   getrepo $name
   getconfig $name
   cd $CAUSELIBS/$name
