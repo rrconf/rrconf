@@ -35,8 +35,10 @@ check.environ.isfile() {
     local name=$1
     shift
     check.environ ${name}
-    test "${!name}" && continue;
-    log "Error: '$name' should point to a file"
+    test -f "${!name}" &&
+      test -r "${!name}" &&
+        continue;
+    log "Error: '$name' should point to a readable file"
     exit 1
   done
 }
