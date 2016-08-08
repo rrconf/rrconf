@@ -8,6 +8,9 @@ CAUSE=${CAUSE:=missing}
 test ${CAUSE} = missing &&
   export CASUE=$(readlink -e $BASH_SOURCE)
 
+# sometimes, e.g. rc.local, HOME may not be set:
+HOME=${HOME:-$(getent passwd $(id -u) | awk -F: '{print$6}')}
+
 # associative arrays must declared as a global variable
 declare -A CAUSEGITMAP
 
