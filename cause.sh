@@ -8,6 +8,10 @@ CAUSE=${CAUSE:=missing}
 test ${CAUSE} = missing &&
   export CASUE=$(readlink -e $BASH_SOURCE)
 
+MYHOME=${MYHOME:=missing}
+test ${MYHOME} = missing &&
+  MYHOME=$(dirname $(readlink -e $0) )
+
 # sometimes, e.g. rc.local, HOME may not be set:
 HOME=${HOME:-$(getent passwd $(id -u) | awk -F: '{print$6}')}
 
