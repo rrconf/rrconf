@@ -8,8 +8,8 @@ CAUSE=${CAUSE:=missing}
 test ${CAUSE} = missing &&
   export CASUE=$(readlink -e $BASH_SOURCE)
 
-MYHOME=${MYHOME:=missing}
-test ${MYHOME} = missing &&
+MYHOMEro=${MYHOME:-missing}
+test ${MYHOMEro} = missing &&
   MYHOME=$(dirname $(readlink -e $0) )
 
 # sometimes, e.g. rc.local, HOME may not be set:
