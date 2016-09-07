@@ -44,8 +44,8 @@ CAUSEPULL=${CAUSEPULL:=never}
 # do a git pull on a module
 function causepull() {
   test x${CAUSEPULL} = xnever && return 0
-  local localpull="CAUSEPULL_${1}"
-  test x${!localpull:-never} = xnever && return 0
+  local localpull="CAUSEPULL_${1//-/_}"
+  test x${!localpull:-unset} = xnever && return 0
 
   git pull --ff-only --rebase
 }
