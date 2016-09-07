@@ -4,9 +4,8 @@
 test ${__cause_cause_sh:=no} = yes && return 0
 __cause_cause_sh=yes
 
-CAUSE=${CAUSE:=missing}
-test ${CAUSE} = missing &&
-  export CASUE=$(readlink -e $BASH_SOURCE)
+CAUSE=${CAUSE:=$(dirname $(readlink -e $BASH_SOURCE))}
+export CAUSE
 
 MYHOMEro=${MYHOME:-missing}
 test ${MYHOMEro} = missing &&
