@@ -87,12 +87,13 @@ function require() {
   markloaded $name || exit 1
   getrepo $name
   getconfig $name
-  cd $CAUSELIBS/$name
+
+  pushd $CAUSELIBS/$name
   causepull $name
   
   ./main || {
     log $name failed
     exit 2
   }
+  popd
 }
-                    
