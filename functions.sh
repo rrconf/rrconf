@@ -93,7 +93,7 @@ tplrender() {
   }
 
   while true; do
-    read -r line || {true;break;}
+    read -r line || {true;break}
     while [[ "$line" =~ (\$\{[a-zA-Z_][a-zA-Z_0-9]*\}) ]] ; do
       LHS=${BASH_REMATCH[1]}
       RHS=${!LHS:-}
