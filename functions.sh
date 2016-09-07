@@ -85,4 +85,20 @@ includeq() {
   }
 }
 
+tplrender() {
+  local tplfile="$1"
+  test $# -gt 1 && {
+    local tplvars="$(readlink -e $2)" || return 0
+    source $tplvars
+  }
+
+  while read -r line ; do
+    while [[ "$line" =~ (\$\{[a-zA-Z_][a-zA-Z_0-9]*\}) ]] ; do
+      LHS=${BASH_REMATCH[1]}
+      RHS=${!LHS:-}
+      line=${line//$LHS/$RHS}
+    done
+  done < "$tplfile"
+}
+
 return 0
