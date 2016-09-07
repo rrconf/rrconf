@@ -85,10 +85,12 @@ function require() {
 
   checkloaded $name && return 0
   markloaded $name || exit 1
+
+  pushd $CAUSELIBS
   getrepo $name
   getconfig $name
 
-  pushd $CAUSELIBS/$name
+  cd $CAUSELIBS/$name
   causepull $name
   
   ./main || {
