@@ -98,7 +98,8 @@ tplrender() {
       RHS=${!LHS:-}
       line=${line//$LHS/$RHS}
     done
-  done < "$tplfile"
+  done < "$tplfile" || true
+
 }
 
 return 0
