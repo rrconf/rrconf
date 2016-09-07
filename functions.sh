@@ -92,6 +92,8 @@ tplrender() {
     source $tplvars
   }
 
+  local oldifs=$IFS
+  IFS=''
   while true; do
     read -r line || {
       true
@@ -104,7 +106,7 @@ tplrender() {
     done
     echo "$line"
   done < "$tplfile"
-
+  IFS="$oldifs"
 }
 
 return 0
