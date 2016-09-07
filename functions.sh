@@ -100,7 +100,7 @@ tplrender() {
       line=${line//$LHS/$RHS}
     done
     echo "$line"
-  done < "$tplfile" || true
+  done < "$tplfile"
 
 }
 
