@@ -39,9 +39,15 @@ test ${CAUSETRACE} = 0 && {
 includeq "${SYSDEFDIR}/cause"
 includeq "${HOME}/.config/cause.sh"
 
+CAUSEPULL=${CAUSEPULL:=never}
+
 # do a git pull on a module
 function causepull() {
-  : #todo. need configs to enable periodical or disable pulls at all
+  test x${CAUSEPULL} = xnever && return 0
+  local localpull="CAUSEPULL_${1}"
+  test x${!localpull:-never} = xnever && return 0
+
+  git pull --ff-only --rebase
 }
 
 # include config files for module
@@ -83,7 +89,7 @@ function require() {
   getrepo $name
   getconfig $name
   cd $CAUSELIBS/$name
-  causepull
+  causepull $name
   
   ./main || {
     log $name failed
