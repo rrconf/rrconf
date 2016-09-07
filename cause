@@ -31,4 +31,6 @@ while test "=${1:0:1}" = "=-"; do
   esac
 done
 
+test -n "${CAUSEDEBUG:-}" && set -x
+
 require $1
