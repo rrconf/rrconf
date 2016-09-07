@@ -100,7 +100,7 @@ tplrender() {
     while [[ "$line" =~ \$\{([a-zA-Z_][a-zA-Z_0-9]*)\} ]] ; do
       LHS=${BASH_REMATCH[1]}
       RHS=${!LHS:-}
-      line=${line//$LHS/$RHS}
+      line=${line//\$\{$LHS\}/$RHS}
     done
     echo "$line"
   done < "$tplfile"
