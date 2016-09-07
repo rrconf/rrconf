@@ -97,7 +97,7 @@ tplrender() {
       true
       break
     }
-    while [[ "$line" =~ (\$\{[a-zA-Z_][a-zA-Z_0-9]*\}) ]] ; do
+    while [[ "$line" =~ \$\{([a-zA-Z_][a-zA-Z_0-9]*)\} ]] ; do
       LHS=${BASH_REMATCH[1]}
       RHS=${!LHS:-}
       line=${line//$LHS/$RHS}
