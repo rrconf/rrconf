@@ -1,13 +1,17 @@
-#!/bin/bash
+#!/usr/bin/env bash
+test -z $(type -p) || { echo bash required; exit 1; }
 set -e
 set -u
 export CDPATH=
 export PATH=/sbin:/usr/sbin:/bin:/usr/bin
-readonly MYNAME=$(basename $(readlink -e $BASH_SOURCE) .sh)
-readonly MYHOME=$(dirname $(readlink -e $BASH_SOURCE) )
 
-export CAUSE="${MYHOME}"
-export CAUSEINC="${MYHOME}/cause.sh"
+test -r /etc/cause/cause.conf &&
+  source /etc/cause/cause.conf
+test -r ~/.cause.conf &&
+  source ~/.cause.conf
+
+export CAUSE=${CAUSE:=/opt/cause}
+export CASUEINC=${CASUEINC:=${CAUSE}/cause.sh}
 
 source "${CAUSEINC}"
 
@@ -22,7 +26,7 @@ test $# -lt 1 &&
 while test "=${1:0:1}" = "=-"; do
   case "=$1" in
   =-x)
-    set -x
+    CAUSEDEBUG=1
     shift
     ;;
   =-h|=--h*)
