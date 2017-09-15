@@ -12,6 +12,6 @@ test -f /etc/redhat-release &&
   SYSDEFDIR=/etc/sysconfig
 
 CAUSELIBS=${CAUSELIBS:=${CAUSE}/lib}
-CAUSEGITBASE=${CAUSEGITBASE:=github.com:cause/cause}
+CAUSEGITBASE=${CAUSEGITBASE:=git@github.com:cause/}
 
 return 0
