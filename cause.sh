@@ -4,15 +4,23 @@
 test ${__cause_cause_sh:=no} = yes && return 0
 __cause_cause_sh=yes
 
-CAUSE=${CAUSE:=$(dirname $(readlink -e $BASH_SOURCE))}
-export CAUSE
+test ${__cause_conf:=no} = yes || {
+  test -r /etc/cause/cause.conf &&
+    source /etc/cause/cause.conf
+  test -r ~/.cause.conf &&
+    source ~/.cause.conf
+  __cause_conf=yes
+}
 
-MYHOMEro=${MYHOME:-missing}
-test ${MYHOMEro} = missing &&
-  MYHOME=$(dirname $(readlink -e $0) )
+test ${CAUSE:-missing} = missing && {
+  echo "Missing CAUSE=<directory>, exitting"
+  exit 1
+}
+
+export CAUSE=$(readlink -e ${CAUSE})
 
 # sometimes, e.g. rc.local, HOME may not be set:
-HOME=${HOME:-$(getent passwd $(id -u) | awk -F: '{print$6}')}
+HOME="${HOME:-$(getent passwd $(id -u) | awk -F: '{print $6}')}"
 
 # associative arrays must declared as a global variable
 declare -A CAUSEGITMAP
@@ -20,11 +28,17 @@ declare -A CAUSEGITMAP
 source "${CAUSE}/functions.sh"
 source "${CAUSE}/defaults.sh"
 
+export CAUSEDEBUG
+export CAUSEVERBOSE
+
 test -d ${CAUSELIBS} ||
   mkdir -p ${CAUSELIBS}
 
 function __cause_cleanup() {
-  cat ${CAUSETRACE}
+  test ${CAUSEVERBOSE} -gt 2 && {
+    echo Cause Trace
+    cat ${CAUSETRACE}
+  }
   rm -f ${CAUSETRACE}
 }
 
@@ -36,7 +50,6 @@ test ${CAUSETRACE} = 0 && {
 }
 
 includeq "${SYSDEFDIR}/cause"
-includeq "${HOME}/.config/cause.sh"
 
 CAUSEPULL=${CAUSEPULL:=never}
 
@@ -64,7 +77,8 @@ function getrepo() {
 
   cd $CAUSELIBS
   test -d $name && return 0
-  local repo=${CAUSEGITMAP[$name]:-$CAUSEGITBASE-$name}
+  local repo=${CAUSEGITMAP[$name]:-${CAUSEGITBASE}$name}
+  logv cloning $repo to $name
   git clone -q $repo $name
 }
 
@@ -80,8 +94,29 @@ function checkloaded() {
   grep -F "require=$name" >/dev/null 2>&1 ${CAUSETRACE}
 }
 
+function replay() {
+  local name=$1
+  
+  logvv replaying $name
+  
+  pushd $CAUSELIBS
+  getrepo $name
+  getconfig $name
+
+  cd $CAUSELIBS/$name
+  causepull $name
+
+  ./main || {
+    log $name failed
+    exit 2
+  }
+  popd
+}
+
 function require() {
   local name=$1
+  
+  logvv requiring $name
 
   checkloaded $name && return 0
   markloaded $name || exit 1

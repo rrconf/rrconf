@@ -11,12 +11,12 @@ test -r ~/.cause.conf &&
   source ~/.cause.conf
 
 export CAUSE=${CAUSE:=/opt/cause}
-export CASUEINC=${CASUEINC:=${CAUSE}/cause.sh}
+export CAUSEINC=${CAUSEINC:=${CAUSE}/cause.sh}
 
 source "${CAUSEINC}"
 
 showhelp() {
-  log "${MYNAME} <name>"
+  log "$0 <name>"
   exit 2
 }
 
@@ -29,12 +29,19 @@ while test "=${1:0:1}" = "=-"; do
     CAUSEDEBUG=1
     shift
     ;;
+  =-v)
+    CAUSEVERBOSE=$(( ${CAUSEVERBOSE}+1 ))
+    shift
+    ;;
   =-h|=--h*)
     showhelp
     ;;
+  *)
+    echo "Unknown switch $1"
+    showhelp
   esac
 done
 
-test -n "${CAUSEDEBUG:-}" && set -x
+test "${CAUSEDEBUG:-0}" -gt 0 && set -x
 
 require $1

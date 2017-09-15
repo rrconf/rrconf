@@ -9,6 +9,21 @@ log() {
   return 0
 }
 
+logv() {
+  test ${CAUSEVERBOSE} -ge 1 || return 0
+  log $*
+}
+
+logvv() {
+  test ${CAUSEVERBOSE} -ge 2 || return 0
+  log $*
+}
+
+logvvv() {
+  test ${CAUSEVERBOSE} -ge 3 || return 0
+  log $*
+}
+
 check.environ() {
   test $# -ge 1 || {
     log "check.environ() expects environment variable names as arguments"
