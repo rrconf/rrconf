@@ -5,6 +5,8 @@ set -u
 export CDPATH=
 export PATH=/sbin:/usr/sbin:/bin:/usr/bin
 
+declare -A CAUSEGITMAP
+
 test -r /etc/cause/cause.conf &&
   source /etc/cause/cause.conf
 test -r ~/.cause.conf &&

@@ -4,6 +4,9 @@
 test ${__cause_cause_sh:=no} = yes && return 0
 __cause_cause_sh=yes
 
+# associative arrays must declared as a global variable
+declare -A CAUSEGITMAP
+
 test ${__cause_conf:=no} = yes || {
   test -r /etc/cause/cause.conf &&
     source /etc/cause/cause.conf
@@ -21,9 +24,6 @@ export CAUSE=$(readlink -e ${CAUSE})
 
 # sometimes, e.g. rc.local, HOME may not be set:
 HOME="${HOME:-$(getent passwd $(id -u) | awk -F: '{print $6}')}"
-
-# associative arrays must declared as a global variable
-declare -A CAUSEGITMAP
 
 source "${CAUSE}/functions.sh"
 source "${CAUSE}/defaults.sh"
