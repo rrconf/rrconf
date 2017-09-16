@@ -25,7 +25,8 @@ showhelp() {
 test $# -lt 1 &&
   showhelp
 
-while test "=${1:0:1}" = "=-"; do
+while test $# -ge 1; do
+  test "=${1:0:1}" = "=-" || break
   case "=$1" in
   =-x)
     CAUSEDEBUG=1
@@ -43,6 +44,11 @@ while test "=${1:0:1}" = "=-"; do
     showhelp
   esac
 done
+
+test $# -ge 1 || {
+  echo Missing module name
+  showhelp
+}
 
 test "${CAUSEDEBUG:-0}" -gt 0 && set -x
 
