@@ -15,6 +15,11 @@ test -r ~/.cause.conf &&
 export CAUSE=${CAUSE:=/opt/cause}
 export CAUSEINC=${CAUSEINC:=${CAUSE}/cause.sh}
 
+test -r "${CAUSEINC}" || {
+  echo "Missing ${CAUSEINC} file, please export installation directory in CAUSE environment variable"
+  exit 1
+}
+
 source "${CAUSEINC}"
 
 showhelp() {
