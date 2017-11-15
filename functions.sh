@@ -4,7 +4,6 @@
 test ${__cause_functions_sh:=no} = yes && return 0
 __cause_functions_sh=yes
 
-
 log() {
   echo $* 1>&2
   return 0
