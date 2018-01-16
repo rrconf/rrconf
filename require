@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+## this prologue is common to all executables:
+test -z $(type -p) || { echo bash required; exit 1; }
+set -e
+set -u
+export CDPATH=
+export PATH=/sbin:/usr/sbin:/bin:/usr/bin
+
+# associative arrays must declared as a global variable
+declare -A CAUSEGITMAP
+
+test -r /etc/cause/cause.conf && source /etc/cause/cause.conf
+test -r ~/.cause.conf && source ~/.cause.conf
+
+export CAUSE=${CAUSE:=/opt/cause}
+
+test -r "${CAUSE}/lib.sh" {
+  echo "Check if configuration or installation directory is present in \$CAUSE."
+  echo "I cannot read file ${CAUSE}/lib.sh file."
+  exit 1
+}
+
+# include all functions and command line variable checks
+source "${CAUSE}/lib.sh"
+
+## end of prologue
+
+_require $*

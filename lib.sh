@@ -1,5 +1,5 @@
 #
-# common file to be included by any cause script
+# common prollogue to be included by any cause script
 #
 test ${__cause_cause_sh:=no} = yes && return 0
 __cause_cause_sh=yes
@@ -7,23 +7,10 @@ __cause_cause_sh=yes
 # associative arrays must declared as a global variable
 declare -A CAUSEGITMAP
 
-test ${__cause_conf:=no} = yes || {
-  test -r /etc/cause/cause.conf &&
-    source /etc/cause/cause.conf
-  test -r ~/.cause.conf &&
-    source ~/.cause.conf
-  __cause_conf=yes
-}
-
-test ${CAUSE:-missing} = missing && {
-  echo "Missing CAUSE=<directory>, exitting"
-  exit 1
-}
-
 export CAUSE=$(readlink -e ${CAUSE})
 
 # sometimes, e.g. rc.local, HOME may not be set:
-HOME="${HOME:-$(getent passwd $(id -u) | awk -F: '{print $6}')}"
+export HOME="${HOME:-$(getent passwd $(id -u) | awk -F: '{print $6}')}"
 
 source "${CAUSE}/functions.sh"
 source "${CAUSE}/defaults.sh"
@@ -53,6 +40,42 @@ includeq "${SYSDEFDIR}/cause"
 
 CAUSEPULL=${CAUSEPULL:=never}
 
+showhelp() {
+  log "$0 <name>"
+  exit 2
+}
+
+test $# -lt 1 &&
+  showhelp
+
+while test $# -ge 1; do
+  test "=${1:0:1}" = "=-" || break
+  case "=$1" in
+  =-x)
+    CAUSEDEBUG=1
+    shift
+    ;;
+  =-v)
+    CAUSEVERBOSE=$(( ${CAUSEVERBOSE}+1 ))
+    shift
+    ;;
+  =-h|=--h*)
+    showhelp
+    ;;
+  *)
+    echo "Unknown switch $1"
+    showhelp
+  esac
+done
+
+test $# -ge 1 || {
+  echo Missing module name
+  showhelp
+}
+
+
+## functions:
+
 # do a git pull on a module
 function causepull() {
   test x${CAUSEPULL} = xnever && return 0
@@ -60,6 +83,12 @@ function causepull() {
   test x${!localpull:-unset} = xnever && return 0
 
   git pull --ff-only --rebase
+}
+
+# find the repo
+findrepo() {
+  local name=$1
+  
 }
 
 # include config files for module
@@ -113,9 +142,9 @@ function replay() {
   popd
 }
 
-function require() {
+function _require() {
   local name=$1
-  
+
   logvv requiring $name
 
   checkloaded $name && return 0
@@ -134,3 +163,5 @@ function require() {
   }
   popd
 }
+
+test "${CAUSEDEBUG:-0}" -gt 0 && set -x
