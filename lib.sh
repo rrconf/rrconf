@@ -1,8 +1,8 @@
 #
 # common prollogue to be included by any cause script
 #
-test ${__cause_cause_sh:=no} = yes && return 0
-__cause_cause_sh=yes
+test ${__cause_lib_sh:=no} = yes && return 0
+__cause_lib_sh=yes
 
 # associative arrays must declared as a global variable
 declare -A CAUSEGITMAP
@@ -26,11 +26,14 @@ function __cause_cleanup() {
     echo Cause Trace
     cat ${CAUSETRACE}
   }
-  rm -f ${CAUSETRACE}
+  test ${CAUSETRACEMINE} -eq 1 &&
+    rm -f ${CAUSETRACE}
 }
 
 export CAUSETRACE=${CAUSETRACE:=0}
+CAUSETRACEMINE=0
 test ${CAUSETRACE} = 0 && {
+  CAUSETRACEMINE=1
   export CAUSETRACE=$(mktemp /tmp/cause-$(date +%Y%m%d-%H%M%S)-XXXXXXX)
   trap __cause_cleanup 0 1 2 3 6 15
   echo $0 >> ${CAUSETRACE}
@@ -88,7 +91,7 @@ function causepull() {
 # find the repo
 findrepo() {
   local name=$1
-  
+
 }
 
 # include config files for module
@@ -125,9 +128,9 @@ function checkloaded() {
 
 function replay() {
   local name=$1
-  
+
   logvv replaying $name
-  
+
   pushd $CAUSELIBS
   getrepo $name
   getconfig $name
@@ -156,7 +159,7 @@ function _require() {
 
   cd $CAUSELIBS/$name
   causepull $name
-  
+
   ./main || {
     log $name failed
     exit 2
