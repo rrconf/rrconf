@@ -69,7 +69,7 @@ while test $# -ge 1; do
     echo "Unknown switch $1"
     showhelp
   esac
-done
+done || true
 
 test $# -ge 1 || {
   echo Missing module name
@@ -168,3 +168,4 @@ function _require() {
 }
 
 test "${CAUSEDEBUG:-0}" -gt 0 && set -x
+return 0
