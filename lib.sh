@@ -15,6 +15,9 @@ export HOME="${HOME:-$(getent passwd $(id -u) | awk -F: '{print $6}')}"
 source "${CAUSE}/functions.sh"
 source "${CAUSE}/defaults.sh"
 
+export require="$CAUSE/require"
+export replay="$CAUSE/replay"
+
 export CAUSEDEBUG
 export CAUSEVERBOSE
 
@@ -47,9 +50,11 @@ showhelp() {
   log "$0 <name>"
   exit 2
 }
-
-test $# -lt 1 &&
+set -x
+needname=${needname:=0}
+test $needname -eq 1 -a $# -lt 1 &&
   showhelp
+set +x
 
 while test $# -ge 1; do
   test "=${1:0:1}" = "=-" || break
@@ -71,11 +76,12 @@ while test $# -ge 1; do
   esac
 done || true
 
-test $# -ge 1 || {
+set -x
+test $needname -eq 0 -o $# -ge 1 || {
   echo Missing module name
   showhelp
 }
-
+set +x
 
 ## functions:
 
@@ -126,10 +132,11 @@ function checkloaded() {
   grep -F "require=$name" >/dev/null 2>&1 ${CAUSETRACE}
 }
 
-function replay() {
+function _replay() {
   local name=$1
+  shift
 
-  logvv replaying $name
+  logvv executing module $name
 
   pushd $CAUSELIBS
   getrepo $name
@@ -138,7 +145,7 @@ function replay() {
   cd $CAUSELIBS/$name
   causepull $name
 
-  ./main || {
+  ./main $* || {
     log $name failed
     exit 2
   }
@@ -147,24 +154,13 @@ function replay() {
 
 function _require() {
   local name=$1
+  shift
 
   logvv requiring $name
 
   checkloaded $name && return 0
   markloaded $name || exit 1
-
-  pushd $CAUSELIBS
-  getrepo $name
-  getconfig $name
-
-  cd $CAUSELIBS/$name
-  causepull $name
-
-  ./main || {
-    log $name failed
-    exit 2
-  }
-  popd
+  _replay $name $*
 }
 
 test "${CAUSEDEBUG:-0}" -gt 0 && set -x

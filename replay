@@ -27,4 +27,4 @@ export CAUSEINC="${CAUSE}/lib.sh"
 source "${CAUSE}/lib.sh"
 
 ## end of prologue
-_require $*
+_replay $*
