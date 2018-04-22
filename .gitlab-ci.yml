@@ -3,4 +3,6 @@ image: mkovac/stretch
 
 test:
   script:
-    - id -a
+    - cat /proc/mounts
+    - mv /builds/cause/cause /opt/cause
+    - /opt/cause/require info
