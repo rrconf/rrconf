@@ -1,0 +1,7 @@
+
+image: mkovac/stretch
+
+test:
+  script:
+    - ifconfig
+    - find /mnt
