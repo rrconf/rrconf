@@ -75,12 +75,10 @@ while test $# -ge 1; do
   esac
 done || true
 
-set -x
 test $needname -eq 0 -o $# -ge 1 || {
   echo Missing module name
   showhelp
 }
-set +x
 
 ## functions:
 
