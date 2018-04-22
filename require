@@ -3,6 +3,7 @@
 test -z $(type -p) || { echo bash required; exit 1; }
 set -e
 set -u
+set -x
 export CDPATH=
 export PATH=/sbin:/usr/sbin:/bin:/usr/bin
 

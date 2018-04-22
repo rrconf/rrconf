@@ -50,11 +50,10 @@ showhelp() {
   log "$0 <name>"
   exit 2
 }
-set -x
+
 needname=${needname:=0}
 test $needname -eq 1 -a $# -lt 1 &&
   showhelp
-set +x
 
 while test $# -ge 1; do
   test "=${1:0:1}" = "=-" || break
