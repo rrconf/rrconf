@@ -3,7 +3,7 @@ image: mkovac/stretch
 
 test:
   script:
-    - XX=$(PWD)
+    - XX=$(pwd)
     - echo $XX
     - exit 0
     - apt update
