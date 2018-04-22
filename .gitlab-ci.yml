@@ -3,6 +3,9 @@ image: mkovac/stretch
 
 test:
   script:
+    - XX=$(PWD)
+    - echo $XX
+    - exit 0
     - apt update
     - apt install -y ssh
     - cat /proc/mounts
