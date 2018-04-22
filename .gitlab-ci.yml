@@ -5,7 +5,7 @@ test:
   script:
     - env|sort
     - SRCDIR=$(pwd)
-    - mv $srcdir /opt/cause
+    - mv $SRCDIR /opt/cause
     - apt update
     - apt install -y ssh
     - echo "CAUSEGITBASE=http://gitlab.telnet.sk/cause" > /etc/default/cause
