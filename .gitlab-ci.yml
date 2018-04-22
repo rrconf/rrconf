@@ -7,6 +7,6 @@ test:
     - SRCDIR=$(pwd)
     - mv $SRCDIR /opt/cause
     - apt update
-    - apt install -y ssh
-    - echo "CAUSEGITBASE=http://gitlab.telnet.sk/cause" > /etc/default/cause
+    - apt install -y --no-install-recommends ssh ca-certificates
+    - echo "CAUSEGITBASE=http://gitlab.telnet.sk/cause/" > /etc/default/cause
     - cd / && /opt/cause/require info
