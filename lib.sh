@@ -112,7 +112,7 @@ function getrepo() {
 
   cd $CAUSELIBS
   test -d $name && return 0
-  local repo=${CAUSEGITMAP[$name]:-${CAUSEGITBASE}$name}
+  local repo=${CAUSEGITMAP[$name]:-${CAUSEGITBASE}$name}.git
   logv cloning $repo to $name
   git clone -q $repo $name
 }
