@@ -5,8 +5,8 @@ test:
   script:
     - env|sort
     - SRCDIR=$(pwd)
-    - mv $SRCDIR /opt/cause
+    - cp -r $SRCDIR /opt/cause
     - apt update
-    - apt install -y --no-install-recommends ssh ca-certificates
+    - apt install -y --no-install-recommends openssh-client ca-certificates
     - echo "CAUSEGITBASE=http://gitlab.telnet.sk/cause/" > /etc/default/cause
     - cd / && /opt/cause/require info
