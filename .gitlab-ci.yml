@@ -1,5 +1,5 @@
 
-image: mkovac/stretch
+image: mkovac/stretch-runner
 
 test:
   script:
