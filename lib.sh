@@ -37,12 +37,12 @@ export CAUSETRACE=${CAUSETRACE:=0}
 CAUSETRACEMINE=0
 test ${CAUSETRACE} = 0 && {
   CAUSETRACEMINE=1
-  export CAUSETRACE=$(mktemp /tmp/cause-$(date +%Y%m%d-%H%M%S)-XXXXXXX)
+  export CAUSETRACE=$(mktemp /tmp/rrconf-$(date +%Y%m%d-%H%M%S)-XXXXXXX)
   trap __cause_cleanup 0 1 2 3 6 15
   echo $0 >> ${CAUSETRACE}
 }
 
-includeq "${SYSDEFDIR}/cause"
+includeq "${SYSDEFDIR}/rrconf"
 
 CAUSEPULL=${CAUSEPULL:=never}
 
@@ -103,7 +103,7 @@ function getconfig() {
 
   cd $CAUSELIBS/$name
   includeq "$(readlink -e defaults.sh)"
-  includeq "$(readlink -e /etc/cause/config-$name.sh)"
+  includeq "$(readlink -e /etc/rrconf/config-$name.sh)"
 }
 
 # when module is required, but not present - clone it
