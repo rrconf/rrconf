@@ -9,4 +9,5 @@ test:
     - apt update
     - apt install -y --no-install-recommends openssh-client ca-certificates
     - echo "CAUSEGITBASE=http://gitlab.telnet.sk/rrconf/" > /etc/default/rrconf
+    - export CAUSEDEBUG=1
     - cd / && /opt/rrconf/require info
