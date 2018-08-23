@@ -88,7 +88,7 @@ function causepull() {
   local localpull="CAUSEPULL_${1//-/_}"
   test x${!localpull:-unset} = xnever && return 0
 
-  git pull --ff-only --rebase
+  git pull --quiet --ff-only --rebase
 }
 
 # find the repo
