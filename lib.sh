@@ -1,8 +1,8 @@
 #
-# common prollogue to be included by any cause script
+# common prollogue to be included by any rrconf executable
 #
-test ${__cause_lib_sh:=no} = yes && return 0
-__cause_lib_sh=yes
+test ${__rrconf_lib_sh:=no} = yes && return 0
+__rrconf_lib_sh=yes
 
 export CAUSE=$(readlink -e ${CAUSE})
 
@@ -21,7 +21,7 @@ export CAUSEVERBOSE
 test -d ${CAUSELIBS} ||
   mkdir -p ${CAUSELIBS}
 
-function __cause_cleanup() {
+function __rrconf_cleanup() {
   test ${CAUSEVERBOSE} -gt 2 && {
     echo Cause Trace
     cat ${CAUSETRACE}
@@ -35,7 +35,7 @@ CAUSETRACEMINE=0
 test ${CAUSETRACE} = 0 && {
   CAUSETRACEMINE=1
   export CAUSETRACE=$(mktemp /tmp/rrconf-$(date +%Y%m%d-%H%M%S)-XXXXXXX)
-  trap __cause_cleanup 0 1 2 3 6 15
+  trap __rrconf_cleanup 0 1 2 3 6 15
   echo $0 >> ${CAUSETRACE}
 }
 
@@ -80,7 +80,7 @@ test $needname -eq 0 -o $# -ge 1 || {
 ## functions:
 
 # do a git pull on a module
-function causepull() {
+function modpull() {
   test x${CAUSEPULL} = xnever && return 0
   local localpull="CAUSEPULL_${1//-/_}"
   test x${!localpull:-unset} = xnever && return 0
@@ -137,7 +137,7 @@ function _replay() {
   getconfig $name
 
   cd $CAUSELIBS/$name
-  causepull $name
+  modpull $name
 
   ./main $* || {
     log $name failed
