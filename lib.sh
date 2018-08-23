@@ -91,12 +91,6 @@ function causepull() {
   git pull --quiet --ff-only --rebase
 }
 
-# find the repo
-findrepo() {
-  local name=$1
-
-}
-
 # include config files for module
 function getconfig() {
   local name=$1
