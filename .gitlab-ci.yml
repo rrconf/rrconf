@@ -6,7 +6,7 @@ test:
     - env|sort
     - SRCDIR=$(pwd)
     - cp -r $SRCDIR /opt/rrconf
-    - mkdir /etc/rrconf/repos.d
+    - mkdir -p /etc/rrconf/repos.d
     - echo "ssh://gitlab.telnet.sk/rrconf/" > /etc/rrconf/repos.d/33-gitlab
     - export CAUSEDEBUG=1
     - cd / && /opt/rrconf/require -x -v -v info
