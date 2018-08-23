@@ -4,9 +4,6 @@
 test ${__cause_lib_sh:=no} = yes && return 0
 __cause_lib_sh=yes
 
-# associative arrays must declared as a global variable
-declare -A CAUSEGITMAP
-
 export CAUSE=$(readlink -e ${CAUSE})
 
 # sometimes, e.g. rc.local, HOME may not be set:
