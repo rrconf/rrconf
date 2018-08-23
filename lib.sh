@@ -106,9 +106,15 @@ function getrepo() {
 
   cd $CAUSELIBS
   test -d $name && return 0
-  local repo=${CAUSEGITMAP[$name]:-${CAUSEGITBASE}$name}.git
-  logv cloning $repo to $name
-  git clone -q $repo $name
+
+  local repodir=${RRCONF_REPOS:=/etc/rrconf/repos.d}
+  for repo in $(run-parts --list -- $repodir); do
+    repourl=$(<$repo)${name}.git
+    logvv trying to clone $repourl
+    git clone -q $repourl $name && return 0 || continue
+  done
+  logv missing repository for $name
+  return 1
 }
 
 function markloaded() {
