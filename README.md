@@ -12,7 +12,7 @@ There are about 350 lines of shell code, properly commented (improvements welcom
 
 The `require` and `replay` take a module name as argument, clone it from the repository and execute it. All modules can recursively use `require` and `replay` if they depend on other modules.
 
-If a module is `require`ed, it is run only once, while `replay`ed modules can be invoked in loops, or to re-run `requir`ed module with different configuration.
+If a module is `require`d, it is run only once, while `replay`ed modules can be invoked in loops, or to re-run `require`d module with different configuration.
 
 The repositories for modules are searched in a `PATH`-like manner, **the first match wins**. Modules can thus be written by others, but your repositories should be in front.
 
@@ -53,7 +53,7 @@ RRCONF_REPOS=/etc/rrconf/repos.d
 As an ordinary user you do have to change some defaults, or completely change system defaults if they exist:
 
 ```
-RRCONF_REPOS=/home/${USER}/repos.d
+RRCONF_REPOS=${HOME}/repos.d
 ```
 
 Last step is to create at least one repo file. The content of the file is partial name of the repository strings to try to clone modules. There can be multiple files and their names are enumerated and sorted by `run-parts`, so default backup files or package installer files are excluded.
@@ -87,4 +87,4 @@ $
 
 ### Contributing
 
-Please note, that GitHub repo is a mirror from private server. You can use issues or make pull requests here on GitHub.
+Please note, that GitHub repo is a mirror from private server. You can use issues or make pull requests on GitHub.
