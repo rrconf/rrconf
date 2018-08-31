@@ -108,9 +108,13 @@ function getrepo() {
   for repo in $(run-parts --list -- $repodir); do
     repourl=$(<$repo)${name}.git
     logvv trying to clone $repourl
-    git clone -q $repourl $name && return 0 || continue
-  done
-  logv missing repository for $name
+    git clone -q $repourl $name && return 0 || {
+      logv Failed to clone $repourl
+      continue
+    }
+  done || {
+    log Missing repository for $name
+  }
   return 1
 }
 
