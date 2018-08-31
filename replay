@@ -18,7 +18,7 @@ test -r "${RRCONF}/lib.sh" || {
 }
 
 needname=1
-export CAUSEINC="${RRCONF}/lib.sh"
+export RRCONFINC="${RRCONF}/lib.sh"
 
 # include all functions and command line variable checks
 source "${RRCONF}/lib.sh"
