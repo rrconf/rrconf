@@ -41,7 +41,7 @@ test ${RRTRACE} = 0 && {
 
 includeq "${SYSDEFDIR}/rrconf"
 
-CAUSEPULL=${CAUSEPULL:=never}
+RRMODPULL=${RRMODPULL:=never}
 
 showhelp() {
   log "$0 <name>"
@@ -81,8 +81,8 @@ test $needname -eq 0 -o $# -ge 1 || {
 
 # do a git pull on a module
 function modpull() {
-  test x${CAUSEPULL} = xnever && return 0
-  local localpull="CAUSEPULL_${1//-/_}"
+  test x${RRMODPULL} = xnever && return 0
+  local localpull="RRMODPULL_${1//-/_}"
   test x${!localpull:-unset} = xnever && return 0
 
   git pull --quiet --ff-only --rebase
