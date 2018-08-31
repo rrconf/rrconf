@@ -112,9 +112,8 @@ function getrepo() {
       logv Failed to clone $repourl
       continue
     }
-  done || {
-    log Missing repository for $name
-  }
+  done
+  log Missing repository for $name
   return 1
 }
 
