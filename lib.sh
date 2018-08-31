@@ -26,14 +26,14 @@ function __rrconf_cleanup() {
     echo Cause Trace
     cat ${RRTRACE}
   }
-  test ${CAUSETRACEMINE} -eq 1 &&
+  test ${RRTRACEMINE} -eq 1 &&
     rm -f ${RRTRACE}
 }
 
 export RRTRACE=${RRTRACE:=0}
-CAUSETRACEMINE=0
+RRTRACEMINE=0
 test ${RRTRACE} = 0 && {
-  CAUSETRACEMINE=1
+  RRTRACEMINE=1
   export RRTRACE=$(mktemp /tmp/rrconf-$(date +%Y%m%d-%H%M%S)-XXXXXXX)
   trap __rrconf_cleanup 0 1 2 3 6 15
   echo $0 >> ${RRTRACE}
