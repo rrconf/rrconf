@@ -10,17 +10,17 @@ log() {
 }
 
 logv() {
-  test ${CAUSEVERBOSE} -ge 1 || return 0
+  test ${RRLOGLEVEL} -ge 1 || return 0
   log $*
 }
 
 logvv() {
-  test ${CAUSEVERBOSE} -ge 2 || return 0
+  test ${RRLOGLEVEL} -ge 2 || return 0
   log $*
 }
 
 logvvv() {
-  test ${CAUSEVERBOSE} -ge 3 || return 0
+  test ${RRLOGLEVEL} -ge 3 || return 0
   log $*
 }
 

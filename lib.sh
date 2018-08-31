@@ -15,14 +15,14 @@ source "${RRCONF}/defaults.sh"
 export require="$RRCONF/require"
 export replay="$RRCONF/replay"
 
-export CAUSEDEBUG
-export CAUSEVERBOSE
+export RRDEBUG
+export RRLOGLEVEL
 
 test -d ${RRMODULES} ||
   mkdir -p ${RRMODULES}
 
 function __rrconf_cleanup() {
-  test ${CAUSEVERBOSE} -gt 2 && {
+  test ${RRLOGLEVEL} -gt 2 && {
     echo Cause Trace
     cat ${CAUSETRACE}
   }
@@ -56,11 +56,11 @@ while test $# -ge 1; do
   test "=${1:0:1}" = "=-" || break
   case "=$1" in
   =-x)
-    CAUSEDEBUG=1
+    RRDEBUG=1
     shift
     ;;
   =-v)
-    CAUSEVERBOSE=$(( ${CAUSEVERBOSE}+1 ))
+    RRLOGLEVEL=$(( ${RRLOGLEVEL}+1 ))
     shift
     ;;
   =-h|=--h*)
@@ -157,5 +157,5 @@ function _require() {
   _replay $name $*
 }
 
-test "${CAUSEDEBUG:-0}" -gt 0 && set -x
+test "${RRDEBUG:-0}" -gt 0 && set -x
 return 0
