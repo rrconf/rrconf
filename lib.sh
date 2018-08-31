@@ -83,6 +83,7 @@ test $needname -eq 0 -o $# -ge 1 || {
 function modpull() {
   test x${RRMODPULL} = xnever && return 0
   local localpull="RRMODPULL_${1//-/_}"
+  localpull="${localpull//\./_}"
   test x${!localpull:-unset} = xnever && return 0
 
   git pull --quiet --ff-only --rebase
