@@ -24,19 +24,19 @@ test -d ${RRMODULES} ||
 function __rrconf_cleanup() {
   test ${RRLOGLEVEL} -gt 2 && {
     echo Cause Trace
-    cat ${CAUSETRACE}
+    cat ${RRTRACE}
   }
   test ${CAUSETRACEMINE} -eq 1 &&
-    rm -f ${CAUSETRACE}
+    rm -f ${RRTRACE}
 }
 
-export CAUSETRACE=${CAUSETRACE:=0}
+export RRTRACE=${RRTRACE:=0}
 CAUSETRACEMINE=0
-test ${CAUSETRACE} = 0 && {
+test ${RRTRACE} = 0 && {
   CAUSETRACEMINE=1
-  export CAUSETRACE=$(mktemp /tmp/rrconf-$(date +%Y%m%d-%H%M%S)-XXXXXXX)
+  export RRTRACE=$(mktemp /tmp/rrconf-$(date +%Y%m%d-%H%M%S)-XXXXXXX)
   trap __rrconf_cleanup 0 1 2 3 6 15
-  echo $0 >> ${CAUSETRACE}
+  echo $0 >> ${RRTRACE}
 }
 
 includeq "${SYSDEFDIR}/rrconf"
@@ -117,13 +117,13 @@ function getrepo() {
 function markloaded() {
   local name=$1
 
-  echo "require=$name" >> ${CAUSETRACE}
+  echo "require=$name" >> ${RRTRACE}
 }
 
 function checkloaded() {
   local name=$1
 
-  grep -F "require=$name" >/dev/null 2>&1 ${CAUSETRACE}
+  grep -F "require=$name" >/dev/null 2>&1 ${RRTRACE}
 }
 
 function _replay() {
