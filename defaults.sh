@@ -11,6 +11,6 @@ SYSDEFDIR=/etc/default
 test -f /etc/redhat-release &&
   SYSDEFDIR=/etc/sysconfig
 
-CAUSELIBS=${CAUSELIBS:=${CAUSE}/lib}
+CAUSELIBS=${CAUSELIBS:=${RRCONF}/lib}
 
 return 0

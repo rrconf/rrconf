@@ -4,16 +4,16 @@
 test ${__rrconf_lib_sh:=no} = yes && return 0
 __rrconf_lib_sh=yes
 
-export CAUSE=$(readlink -e ${CAUSE})
+export RRCONF=$(readlink -e ${RRCONF})
 
 # sometimes, e.g. rc.local, HOME may not be set:
 export HOME="${HOME:-$(getent passwd $(id -u) | awk -F: '{print $6}')}"
 
-source "${CAUSE}/functions.sh"
-source "${CAUSE}/defaults.sh"
+source "${RRCONF}/functions.sh"
+source "${RRCONF}/defaults.sh"
 
-export require="$CAUSE/require"
-export replay="$CAUSE/replay"
+export require="$RRCONF/require"
+export replay="$RRCONF/replay"
 
 export CAUSEDEBUG
 export CAUSEVERBOSE
