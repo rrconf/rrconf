@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+## this prologue is common to all executables:
+test -z $(type -p) || { echo bash required; exit 1; }
+set -e
+set -u
+export CDPATH=
+export PATH=/sbin:/usr/sbin:/bin:/usr/bin
+
+test -r /etc/rrconf/rrconf.conf && source /etc/rrconf/rrconf.conf
+test -r ~/.rrconf.conf && source ~/.rrconf.conf
+
+export RRCONF=${RRCONF:=/opt/rrconf}
+
+test -r "${RRCONF}/lib.sh" || {
+  echo "Check if configuration or installation directory is present in \$RRCONF."
+  echo "I cannot read file ${RRCONF}/lib.sh file."
+  exit 1
+}
+
+needname=1
+export RRCONFINC="${RRCONF}/lib.sh"
+
+# include all functions and command line variable checks
+source "${RRCONF}/lib.sh"
+
+## end of prologue
+_require $*
