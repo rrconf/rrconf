@@ -18,8 +18,8 @@ export replay="$RRCONF/replay"
 export CAUSEDEBUG
 export CAUSEVERBOSE
 
-test -d ${CAUSELIBS} ||
-  mkdir -p ${CAUSELIBS}
+test -d ${RRMODULES} ||
+  mkdir -p ${RRMODULES}
 
 function __rrconf_cleanup() {
   test ${CAUSEVERBOSE} -gt 2 && {
@@ -92,7 +92,7 @@ function modpull() {
 function getconfig() {
   local name=$1
 
-  cd $CAUSELIBS/$name
+  cd $RRMODULES/$name
   includeq "$(readlink -e defaults.sh)"
   includeq "$(readlink -e /etc/rrconf/config-$name.sh)"
 }
@@ -101,7 +101,7 @@ function getconfig() {
 function getrepo() {
   local name=$1
 
-  cd $CAUSELIBS
+  cd $RRMODULES
   test -d $name && return 0
 
   local repodir=${RRCONF_REPOS:=/etc/rrconf/repos.d}
@@ -132,11 +132,11 @@ function _replay() {
 
   logvv executing module $name
 
-  pushd $CAUSELIBS
+  pushd $RRMODULES
   getrepo $name
   getconfig $name
 
-  cd $CAUSELIBS/$name
+  cd $RRMODULES/$name
   modpull $name
 
   ./main $* || {
