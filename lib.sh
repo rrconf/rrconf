@@ -135,7 +135,7 @@ function _replay() {
 
   logvv executing module $name
 
-  pushd $RRMODULES
+  pushd $RRMODULES >/dev/null
   getrepo $name
   getconfig $name
 
@@ -146,7 +146,7 @@ function _replay() {
     log $name failed
     exit 2
   }
-  popd
+  popd >/dev/null
 }
 
 function _require() {
