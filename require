@@ -17,7 +17,6 @@ test -r "${RRCONF}/lib.sh" || {
   exit 1
 }
 
-needname=1
 export RRCONFINC="${RRCONF}/lib.sh"
 
 # include all functions and command line variable checks

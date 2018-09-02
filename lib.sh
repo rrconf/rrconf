@@ -48,10 +48,6 @@ showhelp() {
   exit 2
 }
 
-needname=${needname:=0}
-test $needname -eq 1 -a $# -lt 1 &&
-  showhelp
-
 while test $# -ge 1; do
   test "=${1:0:1}" = "=-" || break
   case "=$1" in
@@ -72,8 +68,9 @@ while test $# -ge 1; do
   esac
 done || true
 
-test $needname -eq 0 -o $# -ge 1 || {
-  echo Missing module name
+# if this is a top level invocation, need module name argument
+test ${RRTRACEMINE} -eq 1 -a $# -lt 1 && {
+  log Missing module name
   showhelp
 }
 
