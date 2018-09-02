@@ -48,25 +48,27 @@ showhelp() {
   exit 2
 }
 
-while test $# -ge 1; do
-  test "=${1:0:1}" = "=-" || break
-  case "=$1" in
-  =-x)
-    RRDEBUG=1
-    shift
-    ;;
-  =-v)
-    RRLOGLEVEL=$(( ${RRLOGLEVEL}+1 ))
-    shift
-    ;;
-  =-h|=--h*)
-    showhelp
-    ;;
-  *)
-    echo "Unknown switch $1"
-    showhelp
-  esac
-done || true
+test ${RRTRACEMINE} -eq 1 && {
+  while test $# -ge 1; do
+    test "=${1:0:1}" = "=-" || break
+    case "=$1" in
+    =-x)
+      RRDEBUG=1
+      shift
+      ;;
+    =-v)
+      RRLOGLEVEL=$(( ${RRLOGLEVEL}+1 ))
+      shift
+      ;;
+    =-h|=--h*)
+      showhelp
+      ;;
+    *)
+      echo "Unknown switch $1"
+      showhelp
+    esac
+  done || true
+}
 
 # if this is a top level invocation, need module name argument
 test ${RRTRACEMINE} -eq 1 -a $# -lt 1 && {
