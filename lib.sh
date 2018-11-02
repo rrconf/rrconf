@@ -105,7 +105,7 @@ function getrepo() {
   test -d $name && return 0
 
   local repodir=${RRCONF_REPOS:=/etc/rrconf/repos.d}
-  for repo in $(run-parts --list -- $repodir); do
+  for repo in $(run-parts --list $repodir); do
     repourl=$(<$repo)${name}.git
     logvv trying to clone $repourl
     git clone -q $repourl $name && return 0 || {
