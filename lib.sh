@@ -85,6 +85,7 @@ function modpull() {
   localpull="${localpull//\./_}"
   test x${!localpull:-unset} = xnever && return 0
 
+  logvvv git remote -v
   git pull --quiet --ff-only --rebase
 }
 
