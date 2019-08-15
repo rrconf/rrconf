@@ -1,33 +1,34 @@
 rrconf: require/replay configuration
 ====================================
 
-The motto is [KISS](http://wiki.c2.com/?KissPrinciple). RRconf are two `bash` scripts executing your (or community built) modules, which are all stored somewhere as a git repository.
+Configuration management written with [KISS](http://wiki.c2.com/?KissPrinciple) in mind. The scripts can be used as root or an unprivileged user. RRconf are two `bash` scripts named `require` and `replay`. Each takes a module name as argument - where module is a git repository which contains executable named `main`. Each module may recursively use `require` or `replay`. Complex tasks can be split into smaller, reusable modules. Bootstrapping newly provisioned cloud VM's or even bare metal servers then becomes automated, unattended routine.
 
-**Note:** This is still rather beta than production, but works for me for dozens of (mostly [Debian](https://debian.org/)) systems and containers already, actually run from `cron` as `require $(hostname --fqdn)`. I have almost replaced all ansible and puppet code with this project, for incredibly customized, diverse systems over the net.
+In addition to bootstrapping fresh installations, `require` can be run from `cron` at regular intervals. This enables keeping systems updated, reporting periodically or executing add-hoc tasks following a pull-model - much more scalable than a push-model based configuration management systems. Remote execution is possible via `ssh`. Its good to harden your configuration (e.g. different ssh keys, forcing remote commands, etc.).
+
+There are about 350 lines of shell code, properly commented (improvements welcomed), including empty lines. There is even a template rendering system included.
 
 Simple configuration management
 -------------------------------
 
-There are about 350 lines of shell code, properly commented (improvements welcomed), including empty lines. There is even a template rendering system included.
+Top-level invocation of `require` or `replay` is rather identical, but nested calls from top-level module differ: once a module is `require`d, any subsequent `require` from this or any other module in the same run is skipped. To execute module several times in the same run, use `replay` - potentially with different arguments for each `replay`:
 
-The `require` and `replay` take a module name as argument, clone it from the repository and execute it. All modules can recursively use `require` and `replay` if they depend on other modules.
+```
+$ require webserver
+$ for user in joe jack jane
+> do
+>    replay admin-user $user
+> done
+$
+```
 
-If a module is `require`d, it is run only once, while `replay`ed modules can be invoked in loops, or to re-run `require`d module with different configuration.
+Modules are always in git repositories. The repository name is constructed form a prefix, e.g. `ssh://github.com/myorg/mod-` and the module name. The prefix is of configurable - and can be a list of prefixes. They are stored in plain files in `/etc/rrconf/repos.d/` and is searched in a `PATH`-like manner, **the first match wins**. The first in the list should be your private repos, followed by hub of community repos.
 
-The repositories for modules are searched in a `PATH`-like manner, **the first match wins**. Modules can thus be written by others, but your repositories should be in front.
+Please note that trailing character of prefix is not stripped, **and if it is a slash, even mandatory**. Then you can store repositories for module in a project sub-groups (like devel and prod) and share module and repository names. You can use prefix like `ssh://gitlab:2222/username/devel/module-` and your own info module can have repository base name `module-admin-user.git`.
 
-Remote execution is possible via `ssh`. Its up to you to secure your configuration (e.g. different ssh keys, forcing remote commands, etc.). This way you can also collect metrics from remote systems, or implement simple monitoring.
+Programing language is not enforced. As long as you can read environment variables, or export them for nested processes, you are fine. Just place executable `main` in the root of your module repository and thats all.
 
-Programing language is not enforced. As long as you can read environment variables, or export them for nested processes, you are fine. Make your module executable and thats all.
-
-I have some strong use cases for ideas like classes or facts and plan to implement it, now there is nothing.
-
-Documentation
--------------
-
-More documentation will be written if needed, [just ask](http://www.catb.org/esr/faqs/smart-questions.html#before) and create issue on GitHub. No specific template.
-
-### Installation
+Installation
+------------
 
 Clone the code:
 
@@ -35,13 +36,13 @@ Clone the code:
 $ git clone https://github.com/rrconf/rrconf ~/rrconf
 ```
 
-Now update your `PATH` (remember also shell rc file). As an unprivileged user skip to configuration.
+Now update your `PATH` (remember also your own shell rc file). Alternatively, place symlinks to files in directory which is already in your `PATH` (e.g. into `~/bin`).
 
 System-wide installation is left as an exercise for admins, with the hint that `/opt/rrconf` is my own default system-wide directory. You can pick your choice freely.
 
-#### Configuration
+### Configuration
 
-The configuration is read from `/etc/rrconf.conf` or `/etc/rrconf/rrconf.conf`, later being preferred alternative. This is followed without complaints by reading `~/.rrconf`. The defaults -- if not present -- are as follows:
+Optional configuration is `source`d from `/etc/rrconf/rrconf.conf`, followed by `~/.config/rrconf.conf`. The defaults -- if neither file is present -- are as follows:
 
 ```
 # installation path:
@@ -50,22 +51,18 @@ RRCONF=$(dirname $(realpath -e ${BASH_SOURCE}))
 RRCONF_REPOS=/etc/rrconf/repos.d
 ```
 
-As an ordinary user you do have to change some defaults, or completely change system defaults if they exist:
+An unprivileged user can change some defaults, e.g.:
 
 ```
 RRCONF_REPOS=${HOME}/repos.d
 ```
 
-Last step is to create at least one repo file. The content of the file is partial name of the repository strings to try to clone modules. There can be multiple files and their names are enumerated and sorted by `run-parts`, so default backup files or package installer files are excluded.
+Last step is to create at least one repo file, which should contain repo prefix. There can be multiple files and their names are enumerated and sorted by `run-parts`, so default backup files or package installer files are excluded.
 
 ```
 mkdir /home/username/repos.d
 echo 'https://github.com/rrconf/tutorial-' > /home/username/repos.d/99-last-resort
 ```
-
-Please note that trailing dash is important, **and if it is a slash, even mandatory**, and is never stripped. Then you can store repositories for module in a project sub-groups (like devel and prod) and share module and repository names. You can still use `ssh://gitlab:2222/username/group/module-` and your own info module can have repository base name `module-info.git`.
-
-The files in this directory are enumerated with `run-parts`. There is no default or blacklist implemented, you need at least one repo file.
 
 ### Tutorial
 
@@ -85,6 +82,11 @@ machine-id:d28679839dfe422d8274201f6f97c50d
 $
 ```
 
-### Contributing
+Future and Final notes
+======================
 
-Please note, that GitHub repo is a mirror from private server. You can use issues or make pull requests on GitHub.
+I have some strong use cases for ideas like classes or facts and plan to implement it, now there is nothing.
+
+More documentation will be written if needed, [just ask](http://www.catb.org/esr/faqs/smart-questions.html#before) and create issue on GitHub. No specific template.
+
+This is still rather beta than production, but works for me for dozens of (mostly [Debian](https://debian.org/)) systems and containers already, actually run from `cron` as `require $(hostname --fqdn)`. I have almost replaced all ansible and puppet code with this project, for incredibly customized, diverse systems over the net.
