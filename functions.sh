@@ -24,6 +24,26 @@ logvvv() {
   log $*
 }
 
+warn() {
+  echo warning: $* 1>&2
+  return 0
+}
+
+warnv() {
+  test ${RRLOGLEVEL} -ge 1 || return 0
+  warn $*
+}
+
+warnvv() {
+  test ${RRLOGLEVEL} -ge 2 || return 0
+  warn $*
+}
+
+warnvvv() {
+  test ${RRLOGLEVEL} -ge 3 || return 0
+  warn $*
+}
+
 check.environ() {
   test $# -ge 1 || {
     log "check.environ() expects environment variable names as arguments"
