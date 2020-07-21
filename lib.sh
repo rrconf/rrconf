@@ -4,6 +4,12 @@
 test ${__rrconf_lib_sh:=no} = yes && return 0
 __rrconf_lib_sh=yes
 
+export CDPATH=
+export PATH=/sbin:/usr/sbin:/bin:/usr/bin
+
+test -r /etc/rrconf/rrconf.conf && source /etc/rrconf/rrconf.conf
+test -r ~/.config/rrconf.conf && source ~/.config/rrconf.conf
+
 export RRCONF=$(readlink -e ${RRCONF})
 
 # sometimes, e.g. rc.local, HOME may not be set:
