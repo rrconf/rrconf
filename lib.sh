@@ -104,6 +104,14 @@ function getconfig() {
   includeq "$(readlink -e /etc/rrconf/config-$name.sh)"
 }
 
+function runclone() {
+  local repourl=$1
+  local name=$2
+
+  logvv trying to clone $repourl
+  git clone -q $repourl $name >/dev/null 2>&1
+}
+
 # when module is required, but not present - clone it
 function getrepo() {
   local name=$1
@@ -118,11 +126,11 @@ function getrepo() {
   }
   for repo in $(run-parts --list $repodir); do
     repourl=$(<$repo)${name}.git
-    logvv trying to clone $repourl
-    git clone -q $repourl $name && return 0 || {
-      logv Failed to clone $repourl
-      continue
+    runclone $repourl $name && {
+      logv cloned $repourl
+      return 0
     }
+    logv failed to clone $repourl
   done
   log Missing repository for $name
   return 1
