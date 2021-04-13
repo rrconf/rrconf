@@ -21,8 +21,11 @@ source "${RRCONF}/defaults.sh"
 export require="$RRCONF/require"
 export replay="$RRCONF/replay"
 
+export RRCONF
+export RRCONF_REPOS=${RRCONF_REPOS:=/etc/rrconf/repos.d}
 export RRDEBUG
 export RRLOGLEVEL
+export RRMODULES
 
 test -d ${RRMODULES} ||
   mkdir -p ${RRMODULES}
