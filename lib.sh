@@ -7,13 +7,20 @@ __rrconf_lib_sh=yes
 export CDPATH=
 export PATH=/sbin:/usr/sbin:/bin:/usr/bin
 
-test -r /etc/rrconf/rrconf.conf && source /etc/rrconf/rrconf.conf
-test -r ~/.config/rrconf.conf && source ~/.config/rrconf.conf
+export RRUID=$(/usr/bin/id -u)
+
+test "${RRUID}" -eq 0 || {
+  # non-root user has ability to set defaults before system-wide config
+  test -r ~/.config/rrconf.conf &&
+    source ~/.config/rrconf.conf
+}
+test -r /etc/rrconf/rrconf.conf &&
+  source /etc/rrconf/rrconf.conf
 
 export RRCONF=$(readlink -e ${RRCONF})
 
 # sometimes, e.g. rc.local, HOME may not be set:
-export HOME="${HOME:-$(getent passwd $(id -u) | awk -F: '{print $6}')}"
+export HOME="${HOME:-$(getent passwd ${RRUID} | awk -F: '{print $6}')}"
 
 source "${RRCONF}/functions.sh"
 source "${RRCONF}/defaults.sh"
