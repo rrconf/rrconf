@@ -18,4 +18,4 @@ export RRCONFINC="${RRCONF}/lib.sh"
 source "${RRCONF}/lib.sh"
 
 ## end of prologue
-_replay $*
+_replay "$@"
