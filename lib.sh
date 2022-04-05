@@ -171,7 +171,7 @@ function _replay() {
   cd $RRMODULES/$name
   modpull $name
 
-  ./main $* || {
+  ./main "$@" || {
     log $name failed
     exit 2
   }
@@ -186,7 +186,7 @@ function _require() {
 
   checkloaded $name && return 0
   markloaded $name || exit 1
-  _replay $name $*
+  _replay $name "$@"
 }
 
 test "${RRDEBUG:-0}" -gt 0 && set -x
