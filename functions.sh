@@ -4,44 +4,49 @@
 test ${__rrconf_functions_sh:=no} = yes && return 0
 __rrconf_functions_sh=yes
 
+fail() {
+  echo "$@" 1>&2
+  exit 1
+}
+
 log() {
-  echo $* 1>&2
+  echo "$@" 1>&2
   return 0
 }
 
 logv() {
   test ${RRLOGLEVEL} -ge 1 || return 0
-  log $*
+  log "$@"
 }
 
 logvv() {
   test ${RRLOGLEVEL} -ge 2 || return 0
-  log $*
+  log "$@"
 }
 
 logvvv() {
   test ${RRLOGLEVEL} -ge 3 || return 0
-  log $*
+  log "$@"
 }
 
 warn() {
-  echo warning: $* 1>&2
+  echo warning: "$@" 1>&2
   return 0
 }
 
 warnv() {
   test ${RRLOGLEVEL} -ge 1 || return 0
-  warn $*
+  warn "$@"
 }
 
 warnvv() {
   test ${RRLOGLEVEL} -ge 2 || return 0
-  warn $*
+  warn "$@"
 }
 
 warnvvv() {
   test ${RRLOGLEVEL} -ge 3 || return 0
-  warn $*
+  warn "$@"
 }
 
 check.environ() {
