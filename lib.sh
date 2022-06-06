@@ -58,6 +58,7 @@ test ${RRTRACE} = 0 && {
 includeq "${SYSDEFDIR}/rrconf"
 
 RRMODPULL=${RRMODPULL:=never}
+RRMODDELA=${RRMODDELA:=0}
 
 showhelp() {
   log "$0 <name>"
@@ -100,6 +101,7 @@ function modpull() {
   local localpull="RRMODPULL_${1//-/_}"
   localpull="${localpull//\./_}"
   test x${!localpull:-unset} = xnever && return 0
+  test x${RRMODDELA} = xTRUE && sleep .$[ ( $RANDOM % 5 ) + 1 ]s
 
   logvvv git remote -v
   git pull --quiet --ff-only --rebase
@@ -117,6 +119,8 @@ function getconfig() {
 function runclone() {
   local repourl=$1
   local name=$2
+
+  test x${RRMODDELA} = xTRUE && sleep .$[ ( $RANDOM % 5 ) + 1 ]s
 
   logvv trying to clone $repourl
   git clone -q $repourl $name >/dev/null 2>&1
