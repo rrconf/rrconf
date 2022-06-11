@@ -172,13 +172,15 @@ function _replay() {
   getrepo $name
   getconfig $name
 
-  cd $RRMODULES/$name
+  export RRMODHOME="${RRMODULES}/${name}"
+  cd "${RRMODHOME}"
   modpull $name
 
   ./main "$@" || {
     log $name failed
     exit 2
   }
+  unset RRMODHOME
   popd >/dev/null
 }
 
