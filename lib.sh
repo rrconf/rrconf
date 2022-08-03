@@ -65,6 +65,8 @@ showhelp() {
   exit 2
 }
 
+BRANCH_SWITCH='--single-branch'
+
 test ${RRTRACEMINE} -eq 1 && {
   while test $# -ge 1; do
     test "=${1:0:1}" = "=-" || break
@@ -75,6 +77,10 @@ test ${RRTRACEMINE} -eq 1 && {
       ;;
     =-v)
       RRLOGLEVEL=$(( ${RRLOGLEVEL}+1 ))
+      shift
+      ;;
+    =-ab|=--all-branches)
+      BRANCH_SWITCH=''
       shift
       ;;
     =-h|=--h*)
@@ -104,7 +110,8 @@ function modpull() {
   test x${RRMODDELA} = xTRUE && sleep .$[ ( $RANDOM % 5 ) + 1 ]s
 
   logvvv git remote -v
-  git pull --quiet --ff-only --rebase
+
+  git clone ${BRANCH_SWITCH} -q $repourl $name >/dev/null 2>&1
 }
 
 # include config files for module
@@ -123,7 +130,9 @@ function runclone() {
   test x${RRMODDELA} = xTRUE && sleep .$[ ( $RANDOM % 5 ) + 1 ]s
 
   logvv trying to clone $repourl
-  git clone -q $repourl $name >/dev/null 2>&1
+
+  git clone ${BRANCH_SWITCH} -q $repourl $name >/dev/null 2>&1
+
 }
 
 # when module is required, but not present - clone it
