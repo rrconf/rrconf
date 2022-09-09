@@ -103,6 +103,7 @@ test ${RRTRACEMINE} -eq 1 -a $# -lt 1 && {
 
 # do a git pull on a module
 function modpull() {
+  local repourl=$1
   test x${RRMODPULL} = xnever && return 0
   local localpull="RRMODPULL_${1//-/_}"
   localpull="${localpull//\./_}"
