@@ -108,7 +108,7 @@ function modpull() {
   local localpull="RRMODPULL_${1//-/_}"
   localpull="${localpull//\./_}"
   test x${!localpull:-unset} = xnever && return 0
-  test x${RRMODDELA} = xTRUE && sleep .$[ ( $RANDOM % 5 ) + 1 ]s
+  test x${RRMODDELA} = xTRUE && sleep .$[ ( $RANDOM % 5 ) + 5 ]s
 
   logvvv git remote -v
 
@@ -128,7 +128,7 @@ function runclone() {
   local repourl=$1
   local name=$2
 
-  test x${RRMODDELA} = xTRUE && sleep .$[ ( $RANDOM % 5 ) + 1 ]s
+  test x${RRMODDELA} = xTRUE && sleep .$[ ( $RANDOM % 5 ) + 5 ]s
 
   logvv trying to clone $repourl
 
