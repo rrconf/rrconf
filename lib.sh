@@ -111,8 +111,12 @@ function modpull() {
   test x${RRMODDELA} = xTRUE && sleep $[ ( $RANDOM % 5 ) + 5 ]s
 
   logvvv git remote -v
-
-  git clone ${BRANCH_SWITCH} -q $repourl $name >/dev/null 2>&1
+  
+  test -z "${BRANCH_SWITCH}" && {
+    git pull --quiet --ff-only --rebase
+  } || { git fetch --quiet origin master >/dev/null 2>&1
+         git rebase --quiet origin master >/dev/null
+       }
 }
 
 # include config files for module
