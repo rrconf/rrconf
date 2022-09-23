@@ -115,7 +115,10 @@ function modpull() {
     git pull --quiet --ff-only --rebase
   } || { git fetch --quiet origin master >/dev/null 2>&1
          git rebase --quiet origin master >/dev/null 2>&1
-       } || git fetch --quiet origin >/dev/null
+       } || {
+             git fetch --quiet origin main >/dev/null 2>&1
+             git rebase --quiet origin main >/dev/null 2>&1
+             } || git fetch --quiet origin >/dev/null
 }
 
 # include config files for module
