@@ -103,7 +103,6 @@ test ${RRTRACEMINE} -eq 1 -a $# -lt 1 && {
 
 # do a git pull on a module
 function modpull() {
-  local repourl=$1
   test x${RRMODPULL} = xnever && return 0
   local localpull="RRMODPULL_${1//-/_}"
   localpull="${localpull//\./_}"
@@ -115,8 +114,8 @@ function modpull() {
   test -z "${BRANCH_SWITCH}" && {
     git pull --quiet --ff-only --rebase
   } || { git fetch --quiet origin master >/dev/null 2>&1
-         git rebase --quiet origin master >/dev/null
-       }
+         git rebase --quiet origin master >/dev/null 2>&1
+       } || git fetch origin
 }
 
 # include config files for module
