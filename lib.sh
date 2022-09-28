@@ -103,7 +103,7 @@ test ${RRTRACEMINE} -eq 1 -a $# -lt 1 && {
 
 # do a git pull on a module
 function modpull() {
-  local repourl=$1
+  local default_branch="$(git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@')"
   test x${RRMODPULL} = xnever && return 0
   local localpull="RRMODPULL_${1//-/_}"
   localpull="${localpull//\./_}"
@@ -111,8 +111,12 @@ function modpull() {
   test x${RRMODDELA} = xTRUE && sleep $[ ( $RANDOM % 5 ) + 5 ]s
 
   logvvv git remote -v
-
-  git clone ${BRANCH_SWITCH} -q $repourl $name >/dev/null 2>&1
+  
+  test -z "${BRANCH_SWITCH}" && {
+    git pull --quiet --ff-only --rebase
+  } || { git fetch --quiet origin "$default_branch" >/dev/null 2>&1
+         git rebase --quiet origin "$default_branch" >/dev/null 2>&1
+       } || git fetch --quiet origin >/dev/null
 }
 
 # include config files for module
