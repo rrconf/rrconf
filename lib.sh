@@ -65,8 +65,6 @@ showhelp() {
   exit 2
 }
 
-BRANCH_SWITCH='--single-branch'
-
 test ${RRTRACEMINE} -eq 1 && {
   while test $# -ge 1; do
     test "=${1:0:1}" = "=-" || break
@@ -77,10 +75,6 @@ test ${RRTRACEMINE} -eq 1 && {
       ;;
     =-v)
       RRLOGLEVEL=$(( ${RRLOGLEVEL}+1 ))
-      shift
-      ;;
-    =-ab|=--all-branches)
-      BRANCH_SWITCH=''
       shift
       ;;
     =-h|=--h*)
@@ -103,7 +97,7 @@ test ${RRTRACEMINE} -eq 1 -a $# -lt 1 && {
 
 # do a git pull on a module
 function modpull() {
-  local default_branch="$(git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@')"
+  local repourl=$1
   test x${RRMODPULL} = xnever && return 0
   local localpull="RRMODPULL_${1//-/_}"
   localpull="${localpull//\./_}"
@@ -111,12 +105,8 @@ function modpull() {
   test x${RRMODDELA} = xTRUE && sleep $[ ( $RANDOM % 5 ) + 5 ]s
 
   logvvv git remote -v
-  
-  test -z "${BRANCH_SWITCH}" && {
-    git pull --quiet --ff-only --rebase
-  } || { git fetch --quiet origin "$default_branch" >/dev/null 2>&1
-         git rebase --quiet origin "$default_branch" >/dev/null 2>&1
-       } || git fetch --quiet origin >/dev/null
+
+  git clone -q $repourl $name >/dev/null 2>&1
 }
 
 # include config files for module
@@ -136,8 +126,7 @@ function runclone() {
 
   logvv trying to clone $repourl
 
-  git clone ${BRANCH_SWITCH} -q $repourl $name >/dev/null 2>&1
-
+  git clone -q $repourl $name >/dev/null 2>&1
 }
 
 # when module is required, but not present - clone it
