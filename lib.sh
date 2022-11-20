@@ -2,6 +2,7 @@
 # shellcheck shell=bash
 # shellcheck disable=SC1090
 # shellcheck disable=SC1091
+# shellcheck disable=SC2317
 #
 # common prollogue to be included by any rrconf executable
 #
