@@ -1,8 +1,10 @@
+#
 # shellcheck shell=bash
+# shellcheck disable=SC2034
 #
 # distributed defaults
 #
-test ${__rrconf_defaults_sh:=no} = yes && return 0
+test "${__rrconf_defaults_sh:=no}" = yes && return 0
 __rrconf_defaults_sh=yes
 
 RRDEBUG=${RRDEBUG:=0}

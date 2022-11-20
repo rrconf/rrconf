@@ -7,7 +7,7 @@ on:
     - next
 
 jobs:
-  beautify:
+  lint-shellcheck:
     runs-on: ubuntu-latest
     
     steps:
