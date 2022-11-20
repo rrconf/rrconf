@@ -1,7 +1,10 @@
+# shellcheck shell=bash
+# shellcheck disable=SC1090
+# shellcheck disable=SC1091
 #
 # generic shell functions
 #
-test ${__rrconf_functions_sh:=no} = yes && return 0
+test "${__rrconf_functions_sh:=no}" = yes && return 0
 __rrconf_functions_sh=yes
 
 fail() {
@@ -15,17 +18,17 @@ log() {
 }
 
 logv() {
-  test ${RRLOGLEVEL} -ge 1 || return 0
+  test "${RRLOGLEVEL}" -ge 1 || return 0
   log "$@"
 }
 
 logvv() {
-  test ${RRLOGLEVEL} -ge 2 || return 0
+  test "${RRLOGLEVEL}" -ge 2 || return 0
   log "$@"
 }
 
 logvvv() {
-  test ${RRLOGLEVEL} -ge 3 || return 0
+  test "${RRLOGLEVEL}" -ge 3 || return 0
   log "$@"
 }
 
@@ -35,17 +38,17 @@ warn() {
 }
 
 warnv() {
-  test ${RRLOGLEVEL} -ge 1 || return 0
+  test "${RRLOGLEVEL}" -ge 1 || return 0
   warn "$@"
 }
 
 warnvv() {
-  test ${RRLOGLEVEL} -ge 2 || return 0
+  test "${RRLOGLEVEL}" -ge 2 || return 0
   warn "$@"
 }
 
 warnvvv() {
-  test ${RRLOGLEVEL} -ge 3 || return 0
+  test "${RRLOGLEVEL}" -ge 3 || return 0
   warn "$@"
 }
 
@@ -74,7 +77,7 @@ check.environ.isfile() {
   while test $# -ge 1; do
     local name=$1
     shift
-    check.environ ${name}
+    check.environ "${name}"
     test -f "${!name}" &&
       test -r "${!name}" &&
         continue;
@@ -94,7 +97,8 @@ include() {
     return 0
   }
   # some versions of readlink don't fail on missing file here
-  local incl=$(readlink -e "$file") || true
+  local incl
+  incl=$(readlink -e "$file") || true
   test "${incl}" || {
     log "file ${file} to include was not found"
     return 0
@@ -115,7 +119,8 @@ includeq() {
     return 0
   }
   # some versions of readlink don't fail on missing file here
-  local incl=$(readlink -e "$file") || true
+  local incl
+  incl=$(readlink -e "$file") || true
   test "${incl}" || {
     return 0
   }
@@ -128,8 +133,9 @@ includeq() {
 tplrender() {
   local tplfile="$1"
   test $# -gt 1 && {
-    local tplvars="$(readlink -e $2)" || return 0
-    source $tplvars
+    local tplvars
+    tplvars="$(readlink -e "${2}")" || return 0
+    source "${tplvars}"
   }
 
   local oldifs=$IFS
