@@ -2,6 +2,7 @@
 #
 # shellcheck disable=SC1090
 # shellcheck disable=SC2128
+# shellcheck disable=SC2317
 #
 ## this prologue is common to all executables:
 test -z "$(type -p)" || { echo bash required; exit 1; }

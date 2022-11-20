@@ -55,7 +55,7 @@ function __rrconf_cleanup() {
 
 export RRTRACE=${RRTRACE:=0}
 RRTRACEMINE=0
-test ${RRTRACE} = 0 && {
+test "${RRTRACE}" = 0 && {
   RRTRACEMINE=1
   RRTRACE="$(mktemp "/tmp/rrconf-$(date +%Y%m%d-%H%M%S)-XXXXXXX")"
   export RRTRACE
@@ -73,7 +73,7 @@ showhelp() {
   exit 2
 }
 
-test ${RRTRACEMINE} -eq 1 && {
+test "${RRTRACEMINE}" -eq 1 && {
   while test $# -ge 1; do
     test "=${1:0:1}" = "=-" || break
     case "=$1" in
@@ -96,7 +96,7 @@ test ${RRTRACEMINE} -eq 1 && {
 }
 
 # if this is a top level invocation, need module name argument
-test ${RRTRACEMINE} -eq 1 -a $# -lt 1 && {
+test "${RRTRACEMINE}" -eq 1 -a $# -lt 1 && {
   log Missing module name
   showhelp
 }
@@ -106,11 +106,11 @@ test ${RRTRACEMINE} -eq 1 -a $# -lt 1 && {
 # do a git pull on a module
 function modpull() {
   local repourl=$1
-  test "x${RRMODPULL}" = xnever && return 0
+  test "${RRMODPULL}" = never && return 0
   local localpull="RRMODPULL_${1//-/_}"
   localpull="${localpull//\./_}"
-  test "x${!localpull:-unset}" = xnever && return 0
-  test "x${RRMODDELA}" = xTRUE && sleep $(( (RANDOM % 5) + 5 ))s
+  test "${!localpull:-unset}" = never && return 0
+  test "${RRMODDELA}" = TRUE && sleep $(( (RANDOM % 5) + 5 ))s
 
   logvvv git remote -v
 
@@ -133,7 +133,7 @@ function runclone() {
   local repourl=$1
   local name=$2
 
-  test x${RRMODDELA} = xTRUE && sleep $(( (RANDOM % 5) + 5 ))s
+  test "${RRMODDELA}" = TRUE && sleep $(( (RANDOM % 5) + 5 ))s
 
   logvv "Trying to clone ${repourl}"
 
