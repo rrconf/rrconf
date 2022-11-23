@@ -114,7 +114,7 @@ function modpull() {
 
   logvvv git remote -v
 
-  git clone -q "${repourl}" "${name}" >/dev/null 2>&1
+  git pull --quiet --ff-only --rebase
 }
 
 # include config files for module
