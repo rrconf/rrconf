@@ -199,7 +199,7 @@ function _replay() {
   }
   modpull "${name}"
 
-  test "${RRDEBUG}" -eq 2 && {
+  test "${RRDEBUG}" -ge 1 && {
     bash -x ./main "$@" || {
       log "${name} failed"
       exit 2
@@ -226,5 +226,5 @@ function _require() {
   _replay "${name}" "$@"
 }
 
-test "${RRDEBUG:-0}" -gt 0 && set -x
+test "${RRDEBUG:-0}" -ge 2 && set -x
 return 0
