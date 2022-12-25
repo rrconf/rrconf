@@ -199,17 +199,17 @@ function _replay() {
   }
   modpull "${name}"
 
-  test "${RRDEBUG}" -ge 1 && {
+  if test "${RRDEBUG}" -ge 1; then
     bash -x ./main "$@" || {
       log "${name} failed"
       exit 2
     }
-  } || {
+  else
     ./main "$@" || {
       log "${name} failed"
       exit 2
     }
-  }
+  fi
 
   unset RRMODHOME
   popd >/dev/null || return
