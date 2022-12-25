@@ -52,7 +52,7 @@ function main() {
         else
                 ln -s "${RR_DIR}/replay" /bin/replay
         fi
-        
+
         mkdir -p /etc/rrconf/repos.d 2>/dev/null || true
         touch /etc/rrconf/rrconf.conf
 
@@ -61,7 +61,7 @@ function main() {
                 echo "${!repo}" > "/etc/rrconf/repos.d/${nn}-repoconf"
                 nn=$((nn+3))
         done
-        
+
 	return 0
 }
 

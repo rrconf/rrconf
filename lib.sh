@@ -77,6 +77,10 @@ test "${RRTRACEMINE}" -eq 1 && {
   while test $# -ge 1; do
     test "=${1:0:1}" = "=-" || break
     case "=$1" in
+    =-xx)
+      RRDEBUG=2
+      shift
+      ;;
     =-x)
       RRDEBUG=1
       shift
@@ -195,10 +199,18 @@ function _replay() {
   }
   modpull "${name}"
 
-  ./main "$@" || {
-    log "${name} failed"
-    exit 2
-  }
+  if test "${RRDEBUG}" -ge 1; then
+    bash -x ./main "$@" || {
+      log "${name} failed"
+      exit 2
+    }
+  else
+    ./main "$@" || {
+      log "${name} failed"
+      exit 2
+    }
+  fi
+
   unset RRMODHOME
   popd >/dev/null || return
 }
@@ -214,5 +226,5 @@ function _require() {
   _replay "${name}" "$@"
 }
 
-test "${RRDEBUG:-0}" -gt 0 && set -x
+test "${RRDEBUG:-0}" -ge 2 && set -x
 return 0
