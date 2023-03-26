@@ -6,21 +6,25 @@
 #
 ## this prologue is common to all executables:
 test -z "$(type -p)" || { echo bash required; exit 1; }
-set -e
-set -u
+set -Eueo pipefail
 
-export RRCONF=${RRCONF:=$(dirname "$(readlink -e "${BASH_SOURCE}" )" )}
+export CDPATH=
+export PATH=/sbin:/usr/sbin:/bin:/usr/bin
 
-test -r "${RRCONF}/lib.sh" || {
-  echo "Check if configuration or installation directory is present in \$RRCONF."
-  echo "I cannot read file ${RRCONF}/lib.sh file."
+RRCONF="${RRCONF:=$(dirname "$(readlink -e "${BASH_SOURCE}" )" )}"
+RRCONFINC="${RRCONF}/lib.sh"
+
+export RRCONF
+export RRCONFINC
+
+test -r "${RRCONFINC}" || {
+  echo "Check if configuration or installation directory is present in \${RRCONF}."
+  echo "I cannot read file ${RRCONFINC} file."
   exit 1
 }
 
-export RRCONFINC="${RRCONF}/lib.sh"
-
 # include all functions and command line variable checks
-source "${RRCONF}/lib.sh"
+source "${RRCONFINC}"
 
 ## end of prologue
 _replay "$@"

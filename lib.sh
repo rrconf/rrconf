@@ -12,8 +12,15 @@ __rrconf_lib_sh=yes
 export CDPATH=
 export PATH=/sbin:/usr/sbin:/bin:/usr/bin
 
+RRCONF="${RRCONF:=$(dirname "$(readlink -e "${BASH_SOURCE}" )" )}"
+export RRCONF
+
 RRUID=$(/usr/bin/id -u)
 export RRUID
+
+# sometimes, e.g. rc.local, HOME may not be set:
+HOME="${HOME:-$(getent passwd "${RRUID}" | awk -F: '{print $6}')}"
+export HOME
 
 test "${RRUID}" -eq 0 || {
   # non-root user has ability to set defaults before system-wide config
@@ -23,20 +30,13 @@ test "${RRUID}" -eq 0 || {
 test -r /etc/rrconf/rrconf.conf &&
   source /etc/rrconf/rrconf.conf
 
-RRCONF=$(readlink -e "${RRCONF}")
-export RRCONF
-
-# sometimes, e.g. rc.local, HOME may not be set:
-export HOME="${HOME:-$(getent passwd "${RRUID}" | awk -F: '{print $6}')}"
-
 source "${RRCONF}/functions.sh"
 source "${RRCONF}/defaults.sh"
 
-export require="$RRCONF/require"
-export replay="$RRCONF/replay"
+export require="${RRCONF}/require"
+export replay="${RRCONF}/replay"
 
-export RRCONF
-export RRCONF_REPOS=${RRCONF_REPOS:=/etc/rrconf/repos.d}
+export RRCONF_REPOS="${RRCONF_REPOS:=/etc/rrconf/repos.d}"
 export RRDEBUG
 export RRLOGLEVEL
 export RRMODULES
