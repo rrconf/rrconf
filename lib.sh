@@ -129,8 +129,15 @@ function getconfig() {
     warn "Failed chdir to ${RRMODULES}"
     exit 2
   }
+
+  # read defaults from the module sources
   includeq "$(readlink -e defaults.sh)"
-  includeq "$(readlink -e "/etc/rrconf/config-${name}.sh")"
+  # or from local file system (root and non-root locations)
+  if (( RRUID == 0 )); then
+    includeq "$(readlink -e "/etc/rrconf/config-${name}.sh")"
+  else
+    includeq "$(readlink -e ~/.config/config-"${name}".sh)"
+  fi
 }
 
 function runclone() {

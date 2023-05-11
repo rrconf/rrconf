@@ -7,4 +7,5 @@ repos:
     -   id: check-yaml
     -   id: check-added-large-files
     -   id: check-shebang-scripts-are-executable
-    -   id: no-commit-to-branch --branch master
+    -   id: no-commit-to-branch
+        args: [--branch, master]
