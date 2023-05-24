@@ -186,11 +186,35 @@ function checkloaded() {
   grep -F "require=${1}" >/dev/null 2>&1 "${RRTRACE}"
 }
 
+function runmodule() {
+  local name="${1}"
+  shift
+  local pathname="${1}"
+  shift
+
+  if test "${RRDEBUG}" -ge 1; then
+    bash -x "${pathname}" "$@" || {
+      log "${name} failed"
+      exit 2
+    }
+  else
+    "${pathname}" "$@" || {
+      log "${name} failed"
+      exit 2
+    }
+  fi
+}
+
 function _replay() {
-  local name=$1
+  local name="${1}"
   shift
 
   logvv "Executing module ${name}"
+
+  if [[ ${name} =~ ^./ ]]; then
+    runmodule "${name}" "${name}" "$@"
+    return $?
+  fi
 
   pushd "${RRMODULES}" >/dev/null || {
     warn "Failed chdir to ${RRMODULES}"
@@ -206,17 +230,7 @@ function _replay() {
   }
   modpull "${name}"
 
-  if test "${RRDEBUG}" -ge 1; then
-    bash -x ./main "$@" || {
-      log "${name} failed"
-      exit 2
-    }
-  else
-    ./main "$@" || {
-      log "${name} failed"
-      exit 2
-    }
-  fi
+  runmodule "${name}" ./main "$@"
 
   unset RRMODHOME
   popd >/dev/null || return
