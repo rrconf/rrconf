@@ -11,7 +11,7 @@ __rrconf_lib_sh=yes
 
 export CDPATH=
 export PATH=/sbin:/usr/sbin:/bin:/usr/bin
-
+# shellcheck disable=SC2128
 RRCONF="${RRCONF:=$(dirname "$(readlink -e "${BASH_SOURCE}" )" )}"
 export RRCONF
 
@@ -183,7 +183,7 @@ function markloaded() {
 }
 
 function checkloaded() {
-  grep -F "require=${1}" >/dev/null 2>&1 "${RRTRACE}"
+  grep -e "^require=${1}$" >/dev/null 2>&1 "${RRTRACE}"
 }
 
 function runmodule() {
