@@ -2,13 +2,13 @@
 
 ## Simple and Short
 
-Modules should be "short", whatever it means for given task. Typical module is few dozen of lines, occasionaly hundreds, but to deploy very complex application and its configuration files you may require megabytes.
-
 Do one task and do it well.
+
+Modules should be "short", whatever it means for given task. Typical module is few dozen of lines, occasionaly hundreds, but to deploy very complex application and its configuration files you may require megabytes if you distribute binary or packages from git repository of your module.
 
 ## Generic and Reusable
 
-Repeatable work? Parametrize it and re-use. `require` and mainly `replay` is meant to be called from module itself. 
+Repeatable work? Parametrize it and re-use. `require` and mainly `replay` is meant to be called from module itself.
 
 Easier to say than doing copy paste, but over the time, copies of mostly identical modules makes it hard to maintain, fix, or even invent new name.
 
@@ -20,7 +20,9 @@ Patches wlcmed.
 
 ## Don't reinvent the weel
 
-As an example, there is [addgroup](github.com) module, but in a shell script it is so easy to call `/usr/bin/addgroup` that making a module for it seems unnecessary. Do not wrap simple and common unix commands into a module without adding some meaningful add-on value or functionality. Nobody wants to write `require mkdir /foo/bar` from now.
+Nobody neetds a module for simple tasks, e.g. `require mkdir /hello/world` isn't even worth a tutorial.
+
+As an example, there is [addgroup](https://github.com/rrconf/rr-addgroup) module. Even in a shell script it is easy to call `/usr/bin/addgroup` that making a module for it seems unnecessary, many tutorials for config management systems use it as example. In practice, do not wrap simple and common unix commands into a module without adding some meaningful add-on value or functionality.
 
 ----
 [INDEX](./readme.md)
